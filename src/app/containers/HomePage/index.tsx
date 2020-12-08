@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Header } from '../../components/Header/Loadable';
 import { Footer } from '../../components/Footer/Loadable';
 import { MultiSigTransactionForm } from '../MultiSigTransactionForm';
 import { MultiSignConfirmTransactionForm } from '../MultiSignConfirmTransactionForm';
+import { EventContainer } from '../EventContainer';
 
 export function HomePage() {
+  const [selectedTransactionId, setSelectedTransactionId] = useState('');
   return (
     <>
       <Helmet>
@@ -23,9 +25,13 @@ export function HomePage() {
           <MultiSigTransactionForm />
           <div className="mt-5 md:flex md:flex-row md:space-x-4">
             <div className="md:w-4/12">
-              <MultiSignConfirmTransactionForm />
+              <MultiSignConfirmTransactionForm
+                transactionId={selectedTransactionId}
+              />
             </div>
-            {/*<div className="mt-5 md:mt-0 md:w-8/12">events.</div>*/}
+            <div className="mt-5 md:mt-0 md:w-8/12">
+              <EventContainer onSelect={e => setSelectedTransactionId(e)} />
+            </div>
           </div>
         </div>
       </main>

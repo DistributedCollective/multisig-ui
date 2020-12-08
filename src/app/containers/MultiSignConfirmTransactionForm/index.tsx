@@ -14,7 +14,9 @@ import { multiSignConfirmTransactionFormSaga } from './saga';
 import { Button, FormGroup, InputGroup } from '@blueprintjs/core';
 import { multisign_confirmTransaction } from '../BlockChainProvider/requests/multisig';
 
-interface Props {}
+interface Props {
+  transactionId: string;
+}
 
 export function MultiSignConfirmTransactionForm(props: Props) {
   useInjectReducer({ key: sliceKey, reducer: reducer });
@@ -27,7 +29,9 @@ export function MultiSignConfirmTransactionForm(props: Props) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dispatch = useDispatch();
 
-  const [transactionId, setTransactionId] = useState<string>('');
+  const [transactionId, setTransactionId] = useState<string>(
+    props.transactionId,
+  );
   const [isValid, setIsValid] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -48,6 +52,10 @@ export function MultiSignConfirmTransactionForm(props: Props) {
   useEffect(() => {
     setIsValid(!!transactionId);
   }, [transactionId]);
+
+  useEffect(() => {
+    setTransactionId(props.transactionId);
+  }, [props.transactionId]);
 
   return (
     <div className="bg-white rounded shadow p-3">
