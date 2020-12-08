@@ -3,6 +3,6 @@
 
 // export function* doSomething() {}
 
-export function* stakePageSaga() {
+export function* multiSigTransactionFormSaga() {
   // yield takeLatest(actions.someAction.type, doSomething);
 }

@@ -1,3 +1,5 @@
+import Web3 from 'web3';
+import Rsk3 from '@rsksmart/rsk3';
 import { bignumber } from 'mathjs';
 import { blockTime } from '../app/containers/BlockChainProvider/classifiers';
 import { ContractName } from '../app/containers/BlockChainProvider/types';
@@ -133,3 +135,23 @@ export const handleNumber = (value, onlyPositive = true) => {
 
   return number.toString();
 };
+
+export function toChecksumAddress(address: string) {
+  switch (store.getState().blockChainProvider.chainId) {
+    case 30:
+    case 31:
+      return Rsk3.utils.toChecksumAddress(address);
+    default:
+      return Web3.utils.toChecksumAddress(address);
+  }
+}
+
+export function checkAddressChecksum(address) {
+  switch (store.getState().blockChainProvider.chainId) {
+    case 30:
+    case 31:
+      return Rsk3.utils.checkAddressChecksum(address);
+    default:
+      return Web3.utils.checkAddressChecksum(address);
+  }
+}

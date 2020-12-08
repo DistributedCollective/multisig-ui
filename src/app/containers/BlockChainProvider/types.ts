@@ -27,10 +27,7 @@ export interface IContractNetworks {
 }
 
 export interface INetworkToContract {
-  sovToken: IContract;
-  staking: IContract;
-  timelock: IContract;
-  governorAlpha: IContract;
+  multiSigWallet: IContract;
 }
 
 export interface IContract {
@@ -51,17 +48,7 @@ export interface Transactions {
 }
 
 export type TransactionStatus = 'pending' | 'confirmed' | 'failed';
-export type TransactionType =
-  | 'approve'
-  | 'stake'
-  | 'withdraw'
-  | 'extend'
-  | 'propose'
-  | 'execute'
-  | 'cancel'
-  | 'queue'
-  | 'vote'
-  | undefined;
+export type TransactionType = 'submitTransaction' | undefined;
 
 export interface Transaction {
   transactionHash: string;

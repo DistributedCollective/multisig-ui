@@ -23,38 +23,6 @@ export enum ProposalState {
   Executed = '7',
 }
 
-export interface ProposalCreatedEvent {
-  id: number;
-  proposer: string;
-  targets: string[];
-  values: string[];
-  signatures: string[];
-  calldatas: string[];
-  startBlock: number;
-  endBlock: number;
-  description: string;
-}
-
-export interface VoteCastEvent {
-  voter: string;
-  proposalId: number;
-  support: boolean;
-  votes: number;
-}
-
-export interface ProposalCanceledEvent {
-  id: number;
-}
-
-export interface ProposalQueuedEvent {
-  id: number;
-  eta: number;
-}
-
-export interface ProposalExecutedEvent {
-  id: number;
-}
-
 export const getStatus = (state: ProposalState) => {
   const states = {
     '0': 'Pending',
@@ -68,5 +36,3 @@ export const getStatus = (state: ProposalState) => {
   };
   return states[state];
 };
-
-export type RowProposal = Proposal & { description: string };

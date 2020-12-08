@@ -16,23 +16,17 @@ import { BlockChainProvider } from './containers/BlockChainProvider';
 
 import { HomePage } from './containers/HomePage/Loadable';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
-import { ProposalsPage } from './containers/ProposalsPage/Loadable';
-import { ProposalDetailsPage } from './containers/ProposalDetailsPage/Loadable';
-import { StakePage } from './containers/StakePage/Loadable';
 
 export function App() {
   return (
     <BrowserRouter>
       <Helmet
-        titleTemplate="%s | Sovryn Governance"
-        defaultTitle="Sovryn Governance"
+        titleTemplate="%s | Sovryn MultiSig"
+        defaultTitle="Sovryn MultiSig"
       />
       <BlockChainProvider>
         <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route exact path="/proposals" component={ProposalsPage} />
-          <Route exact path="/proposals/:id" component={ProposalDetailsPage} />
-          <Route exact path="/stake" component={StakePage} />
           <Route component={NotFoundPage} />
         </Switch>
       </BlockChainProvider>

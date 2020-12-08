@@ -14,6 +14,7 @@ import { blockChainProviderSaga } from './saga';
 import { PageSkeleton } from '../../components/PageSkeleton';
 import { TransactionHistory } from '../TransactionHistory/Loadable';
 import { ChainId } from './types';
+import { ConnectionGate } from './components/ConnectionGate';
 
 interface Props {
   children: React.ReactNode;
@@ -38,6 +39,10 @@ export function BlockChainProvider(props: Props) {
 
   if (!blockChainProvider.setupCompleted) {
     return <PageSkeleton />;
+  }
+
+  if (!blockChainProvider.connected || !blockChainProvider.address) {
+    return <ConnectionGate {...blockChainProvider} />;
   }
 
   return (
