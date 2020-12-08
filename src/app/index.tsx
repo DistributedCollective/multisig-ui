@@ -19,7 +19,7 @@ import { NotFoundPage } from './components/NotFoundPage/Loadable';
 
 export function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/multisig-ui">
       <Helmet
         titleTemplate="%s | Sovryn MultiSig"
         defaultTitle="Sovryn MultiSig"
