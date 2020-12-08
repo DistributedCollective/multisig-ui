@@ -17,3 +17,15 @@ export function multisign_submitTransaction(
     },
   );
 }
+
+export function multisign_confirmTransaction(transactionId: string) {
+  const account = store.getState().blockChainProvider.address;
+  return network.send(
+    'multiSigWallet',
+    'confirmTransaction',
+    [transactionId, { from: account }],
+    {
+      type: 'confirmTransaction',
+    },
+  );
+}

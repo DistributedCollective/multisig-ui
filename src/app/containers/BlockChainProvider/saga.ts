@@ -13,15 +13,21 @@ import Web3 from 'web3';
 import { network } from './network';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { ChainId } from './types';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { rpcBackupNodes, wssNodes } from './classifiers';
+import { wssNodes } from './classifiers';
 import { walletConnection } from './web3-modal';
 import { selectBlockChainProvider } from './selectors';
 import { TransactionReceipt } from 'web3-core';
+import { getNetwork } from '../../../utils/helpers';
 
-function* setupSaga({ payload }: PayloadAction<ChainId>) {
-  const nodeUrl = wssNodes[payload];
-  // const nodeUrl = rpcBackupNodes[payload];
+function* setupSaga() {
+  walletConnection.init();
+  yield put(actions.setupCompleted());
+}
+
+function* networkSaga({
+  payload,
+}: PayloadAction<{ chainId: ChainId; networkId: number }>) {
+  const nodeUrl = wssNodes[payload.chainId];
   let web3Provider;
   let isWebsocket = false;
   if (nodeUrl.startsWith('http')) {
@@ -37,21 +43,8 @@ function* setupSaga({ payload }: PayloadAction<ChainId>) {
   }
   const web3 = new Web3(web3Provider);
 
-  network.setWeb3(web3, payload === 30 ? 'mainnet' : 'testnet', isWebsocket);
-  walletConnection.init(payload);
-
-  // const threshold = yield call(governance_proposalThreshold);
-  // const quorumVotes = yield call(governance_quorumVotes);
-
-  const threshold = 0;
-  const quorumVotes = 0;
-
-  yield put(
-    actions.setupCompleted({
-      proposalThreshold: threshold,
-      quorumVotes: quorumVotes,
-    }),
-  );
+  network.setWeb3(web3, getNetwork(payload.chainId), isWebsocket);
+  yield put(actions.setupCompleted());
 }
 
 function* connectedSaga({ payload }: PayloadAction<{ address: string }>) {
@@ -238,10 +231,11 @@ function* processBlockHeader(event) {
 
 export function* blockChainProviderSaga() {
   yield takeLatest(actions.setup.type, setupSaga);
+  yield takeLatest(actions.chainChanged.type, networkSaga);
   yield takeLatest(actions.connected.type, connectedSaga);
-  yield takeLatest(actions.disconnect.type, disconnectSaga);
-  yield takeLatest(actions.setupCompleted.type, callCreateBlockChannels);
+  yield takeLatest(actions.connected.type, callCreateBlockChannels);
   yield takeEvery(actions.blockReceived.type, processBlockHeader);
+  yield takeLatest(actions.disconnect.type, disconnectSaga);
   // yield takeLatest(actions.setupCompleted.type, callCreateBlockPollChannel);
   // yield takeEvery(actions.processBlock.type, processBlock); // when using poll channel
 }

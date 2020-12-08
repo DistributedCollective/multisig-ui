@@ -6,10 +6,11 @@ import {
   TransactionStatus,
   TransactionType,
 } from './types';
+import { getNetwork } from '../../../utils/helpers';
 
 // The initial state of the BlockChainProvider container
 export const initialState: ContainerState = {
-  network: 'testnet',
+  network: 'rsk_testnet',
   chainId: 31,
   setupCompleted: false,
   connected: false,
@@ -33,21 +34,11 @@ const blockChainProviderSlice = createSlice({
   name: 'blockChainProvider',
   initialState,
   reducers: {
-    setup(state, { payload }: PayloadAction<ChainId>) {
-      state.chainId = payload;
-      state.network = payload === 30 ? 'mainnet' : 'testnet';
+    setup(state) {
       state.setupCompleted = false;
     },
-    setupCompleted(
-      state,
-      {
-        payload,
-      }: PayloadAction<{ quorumVotes: number; proposalThreshold: number }>,
-    ) {
+    setupCompleted(state) {
       state.setupCompleted = true;
-      state.governanceContractConfig.quorumVotes = payload.quorumVotes;
-      state.governanceContractConfig.proposalThreshold =
-        payload.proposalThreshold;
     },
     connect(state) {
       state.connecting = true;
@@ -70,7 +61,7 @@ const blockChainProviderSlice = createSlice({
       { payload }: PayloadAction<{ chainId: ChainId; networkId: number }>,
     ) {
       state.chainId = payload.chainId;
-      state.network = payload.chainId === 30 ? 'mainnet' : 'testnet';
+      state.network = getNetwork(payload.chainId);
     },
 
     // block watcher

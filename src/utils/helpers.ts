@@ -1,8 +1,15 @@
 import Web3 from 'web3';
 import Rsk3 from '@rsksmart/rsk3';
 import { bignumber } from 'mathjs';
-import { blockTime } from '../app/containers/BlockChainProvider/classifiers';
-import { ContractName } from '../app/containers/BlockChainProvider/types';
+import {
+  blockTime,
+  networks,
+} from '../app/containers/BlockChainProvider/classifiers';
+import {
+  ChainId,
+  ContractName,
+  NetworkName,
+} from '../app/containers/BlockChainProvider/types';
 import { contracts } from '../app/containers/BlockChainProvider/contracts';
 import { store } from '../store/store';
 import { Unit } from 'web3-utils';
@@ -154,4 +161,8 @@ export function checkAddressChecksum(address) {
     default:
       return Web3.utils.checkAddressChecksum(address);
   }
+}
+
+export function getNetwork(chainId: ChainId): NetworkName {
+  return networks[chainId];
 }

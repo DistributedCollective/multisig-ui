@@ -12,7 +12,6 @@ import { contracts } from './contracts';
 import { store } from '../../../store/store';
 import { actions } from './slice';
 import { getContract } from '../../../utils/helpers';
-import { DEFAULT_CHAIN } from './index';
 
 interface SendTxOptions {
   type?: TransactionType;
@@ -53,7 +52,8 @@ class Network {
         provider.removeAllListeners('end');
         this.contracts = {};
         this.web3 = undefined as any;
-        store.dispatch(actions.setup(DEFAULT_CHAIN));
+        const chainId = store.getState().blockChainProvider.chainId;
+        store.dispatch(actions.chainChanged({ chainId, networkId: chainId }));
       });
     }
   }

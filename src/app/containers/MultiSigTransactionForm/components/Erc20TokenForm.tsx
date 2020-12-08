@@ -18,7 +18,7 @@ interface Props {
 export function Erc20TokenForm(props: Props) {
   const [form, setForm] = useState<IErc20TransferSignature>({
     receiver: '',
-    amount: '0',
+    amount: '',
   });
 
   const handleInputChange = useCallback(
@@ -62,7 +62,7 @@ export function Erc20TokenForm(props: Props) {
               leftIcon={'numerical'}
               value={form.amount}
               onChange={handleInputChange('amount')}
-              placeholder="100"
+              placeholder="100.00000"
             />
           </FormGroup>
         </div>

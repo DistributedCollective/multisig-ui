@@ -42,7 +42,7 @@ export function MultiSigTransactionForm(props: Props) {
 
   const [form, setForm] = useState<ISubmitTransactionSignature>({
     destination: '',
-    value: '0.00',
+    value: '',
     data: '0x',
   });
   const [txType, setTxType] = useState<string>(String(TxType.ERC20_TRANSFER));
@@ -90,6 +90,7 @@ export function MultiSigTransactionForm(props: Props) {
 
   return (
     <div className="bg-white rounded shadow p-3">
+      <h3 className="mb-3 font-semibold">Submit Transaction</h3>
       <form onSubmit={handleSubmit}>
         <div className="md:flex md:space-x-4">
           <div className="md:w-7/12">
@@ -107,7 +108,7 @@ export function MultiSigTransactionForm(props: Props) {
               label={[30, 31].includes(chainId) ? 'rBTC amount' : 'ETH amount'}
             >
               <InputGroup
-                leftIcon={'briefcase'}
+                leftIcon={'numerical'}
                 value={form.value}
                 onChange={handleInputChange('value')}
                 placeholder="0.001"

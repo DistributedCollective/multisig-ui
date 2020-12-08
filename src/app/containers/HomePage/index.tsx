@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Header } from '../../components/Header/Loadable';
 import { Footer } from '../../components/Footer/Loadable';
 import { MultiSigTransactionForm } from '../MultiSigTransactionForm';
+import { MultiSignConfirmTransactionForm } from '../MultiSignConfirmTransactionForm';
 
 export function HomePage() {
   return (
@@ -20,6 +21,12 @@ export function HomePage() {
         </div>
         <div className="container py-5">
           <MultiSigTransactionForm />
+          <div className="mt-5 md:flex md:flex-row md:space-x-4">
+            <div className="md:w-4/12">
+              <MultiSignConfirmTransactionForm />
+            </div>
+            {/*<div className="mt-5 md:mt-0 md:w-8/12">events.</div>*/}
+          </div>
         </div>
       </main>
       <Footer />

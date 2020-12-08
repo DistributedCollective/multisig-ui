@@ -7,10 +7,11 @@ import { store } from '../../../store/store';
 import { actions } from './slice';
 import { network } from './network';
 import Web3 from 'web3';
+import { getNetwork } from '../../../utils/helpers';
 
 class WalletConnection {
   private _web3Modal: Web3Modal = null as any;
-  public init(chainId: ChainId) {
+  public init() {
     const providerOptions: IProviderOptions = {
       walletconnect: {
         display: {
@@ -20,7 +21,6 @@ class WalletConnection {
         },
         package: WalletConnectProvider,
         options: {
-          chainId: chainId,
           rpc: rpcNodes,
         },
       },
@@ -82,7 +82,7 @@ class WalletConnection {
 
       const web3 = new Web3(provider);
       const networkId = await web3.eth.net.getId();
-      network.setWriteWeb3(web3, networkId === 30 ? 'mainnet' : 'testnet');
+      network.setWriteWeb3(web3, getNetwork(networkId as ChainId));
 
       const accounts = await network.writeWeb3.eth.getAccounts();
 
@@ -120,13 +120,11 @@ class WalletConnection {
         });
         provider.on('chainChanged', async (chainId: ChainId) => {
           const networkId = await network.writeWeb3.eth.net.getId();
-          await store.dispatch(actions.setup(chainId));
           store.dispatch(actions.chainChanged({ chainId, networkId }));
         });
 
         provider.on('networkChanged', async (networkId: number) => {
           const chainId = await (network.writeWeb3.eth as any).chainId();
-          await store.dispatch(actions.setup(chainId));
           store.dispatch(actions.chainChanged({ chainId, networkId }));
         });
       }

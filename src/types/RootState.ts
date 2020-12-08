@@ -1,5 +1,6 @@
 import { BlockChainProviderState } from 'app/containers/BlockChainProvider/types';
 import { MultiSigTransactionFormState } from 'app/containers/MultiSigTransactionForm/types';
+import { MultiSignConfirmTransactionFormState } from 'app/containers/MultiSignConfirmTransactionForm/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /*
@@ -9,5 +10,6 @@ import { MultiSigTransactionFormState } from 'app/containers/MultiSigTransaction
 export interface RootState {
   blockChainProvider?: BlockChainProviderState;
   multiSigTransactionForm?: MultiSigTransactionFormState;
+  multiSignConfirmTransactionForm?: MultiSignConfirmTransactionFormState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }

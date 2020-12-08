@@ -17,13 +17,14 @@ export interface BlockChainProviderState {
 }
 
 export type NetworkName = keyof IContractNetworks;
-export type ChainId = 30 | 31;
+export type ChainId = 1 | 30 | 31;
 
 export type ContainerState = BlockChainProviderState;
 
 export interface IContractNetworks {
-  mainnet: INetworkToContract;
-  testnet: INetworkToContract;
+  eth_mainnet: INetworkToContract;
+  rsk_mainnet: INetworkToContract;
+  rsk_testnet: INetworkToContract;
 }
 
 export interface INetworkToContract {
@@ -48,7 +49,10 @@ export interface Transactions {
 }
 
 export type TransactionStatus = 'pending' | 'confirmed' | 'failed';
-export type TransactionType = 'submitTransaction' | undefined;
+export type TransactionType =
+  | 'submitTransaction'
+  | 'confirmTransaction'
+  | undefined;
 
 export interface Transaction {
   transactionHash: string;
