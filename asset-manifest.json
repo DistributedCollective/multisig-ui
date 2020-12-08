@@ -1,31 +1,23 @@
 {
   "files": {
-    "static/js/0.25618a35.chunk.js": "/static/js/0.25618a35.chunk.js",
-    "main.css": "/static/css/main.b72a8e4b.chunk.css",
-    "main.js": "/static/js/main.1a4539ae.chunk.js",
-    "runtime-main.js": "/static/js/runtime-main.8d48de1a.js",
-    "static/css/3.b078ea31.chunk.css": "/static/css/3.b078ea31.chunk.css",
-    "static/js/3.ee0e8360.chunk.js": "/static/js/3.ee0e8360.chunk.js",
-    "static/js/4.1c35efec.chunk.js": "/static/js/4.1c35efec.chunk.js",
-    "static/js/5.ec6d604f.chunk.js": "/static/js/5.ec6d604f.chunk.js",
-    "static/js/6.2b00babb.chunk.js": "/static/js/6.2b00babb.chunk.js",
-    "static/js/7.36df3234.chunk.js": "/static/js/7.36df3234.chunk.js",
-    "static/js/8.e7b7f39f.chunk.js": "/static/js/8.e7b7f39f.chunk.js",
-    "static/js/9.0a0d8ea1.chunk.js": "/static/js/9.0a0d8ea1.chunk.js",
-    "static/js/10.f9beb830.chunk.js": "/static/js/10.f9beb830.chunk.js",
-    "static/js/11.964e7621.chunk.js": "/static/js/11.964e7621.chunk.js",
-    "static/js/12.d8e71723.chunk.js": "/static/js/12.d8e71723.chunk.js",
-    "static/js/13.8096841e.chunk.js": "/static/js/13.8096841e.chunk.js",
-    "index.html": "/index.html",
-    "static/js/0.25618a35.chunk.js.LICENSE.txt": "/static/js/0.25618a35.chunk.js.LICENSE.txt",
-    "static/js/3.ee0e8360.chunk.js.LICENSE.txt": "/static/js/3.ee0e8360.chunk.js.LICENSE.txt",
-    "static/js/4.1c35efec.chunk.js.LICENSE.txt": "/static/js/4.1c35efec.chunk.js.LICENSE.txt"
+    "main.css": "/multisig-ui/static/css/main.38e68fde.chunk.css",
+    "main.js": "/multisig-ui/static/js/main.c8c9c756.chunk.js",
+    "runtime-main.js": "/multisig-ui/static/js/runtime-main.afe1238a.js",
+    "static/css/2.b078ea31.chunk.css": "/multisig-ui/static/css/2.b078ea31.chunk.css",
+    "static/js/2.68e1e5ae.chunk.js": "/multisig-ui/static/js/2.68e1e5ae.chunk.js",
+    "static/js/3.272967bf.chunk.js": "/multisig-ui/static/js/3.272967bf.chunk.js",
+    "static/js/4.12021bf7.chunk.js": "/multisig-ui/static/js/4.12021bf7.chunk.js",
+    "static/js/5.4911136e.chunk.js": "/multisig-ui/static/js/5.4911136e.chunk.js",
+    "static/js/6.037ea029.chunk.js": "/multisig-ui/static/js/6.037ea029.chunk.js",
+    "static/js/7.9268b275.chunk.js": "/multisig-ui/static/js/7.9268b275.chunk.js",
+    "index.html": "/multisig-ui/index.html",
+    "static/js/2.68e1e5ae.chunk.js.LICENSE.txt": "/multisig-ui/static/js/2.68e1e5ae.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.8d48de1a.js",
-    "static/css/3.b078ea31.chunk.css",
-    "static/js/3.ee0e8360.chunk.js",
-    "static/css/main.b72a8e4b.chunk.css",
-    "static/js/main.1a4539ae.chunk.js"
+    "static/js/runtime-main.afe1238a.js",
+    "static/css/2.b078ea31.chunk.css",
+    "static/js/2.68e1e5ae.chunk.js",
+    "static/css/main.38e68fde.chunk.css",
+    "static/js/main.c8c9c756.chunk.js"
   ]
 }
