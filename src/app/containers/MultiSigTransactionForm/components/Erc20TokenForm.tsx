@@ -36,14 +36,23 @@ export function Erc20TokenForm(props: Props) {
 
   useEffect(() => {
     try {
-      const data = er20_transfer_abi(form.receiver, toWei(form.amount));
-      console.log(er20_transfer_abi_decode(data));
-      props.onData(data);
+      const run = async () => {
+        const data = await er20_transfer_abi(
+          props.value.destination,
+          form.receiver,
+          form.amount || '0',
+        );
+        if (data && data !== '0x') {
+          console.log(er20_transfer_abi_decode(data));
+        }
+        return data;
+      };
+      run().then(props.onData);
     } catch (e) {
       props.onData('0x');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form]);
+  }, [form, props.value.destination]);
 
   return (
     <section>
