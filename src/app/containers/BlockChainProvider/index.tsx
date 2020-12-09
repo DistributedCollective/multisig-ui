@@ -41,7 +41,7 @@ export function BlockChainProvider(props: Props) {
     return <ConnectionGate {...blockChainProvider} />;
   }
 
-  if (![1, 30, 31].includes(blockChainProvider.chainId)) {
+  if (![1, 3, 30, 31].includes(blockChainProvider.chainId)) {
     return <NetworkGate />;
   }
 

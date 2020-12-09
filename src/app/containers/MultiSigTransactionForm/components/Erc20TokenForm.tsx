@@ -7,7 +7,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
 import { IErc20TransferSignature, ISubmitTransactionSignature } from '../types';
-import { er20_transfer_abi } from '../../BlockChainProvider/requests/erc20';
+import {
+  er20_transfer_abi,
+  er20_transfer_abi_decode,
+} from '../../BlockChainProvider/requests/erc20';
 import { toWei } from '../../../../utils/helpers';
 
 interface Props {
@@ -34,9 +37,9 @@ export function Erc20TokenForm(props: Props) {
   useEffect(() => {
     try {
       const data = er20_transfer_abi(form.receiver, toWei(form.amount));
+      console.log(er20_transfer_abi_decode(data));
       props.onData(data);
     } catch (e) {
-      console.warn('data error', e.message);
       props.onData('0x');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

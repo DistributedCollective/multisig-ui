@@ -10,3 +10,23 @@ export function er20_transfer_abi(receiver: string, amount: string) {
     .transfer(toChecksumAddress(receiver), amount)
     .encodeABI();
 }
+
+export function er20_transfer_abi_decode(data) {
+  try {
+    const signature = web3.eth.abi.encodeFunctionSignature(
+      'transfer(address,uint256)',
+    );
+    const da = data.substr(signature.length);
+    return {
+      signature,
+      data: da,
+      decoded: web3.eth.abi.decodeParameters(
+        ['address', 'uint256'],
+        data.substr(signature.length),
+      ),
+    };
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}

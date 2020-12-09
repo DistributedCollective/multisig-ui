@@ -16,12 +16,13 @@ export interface BlockChainProviderState {
 }
 
 export type NetworkName = keyof IContractNetworks;
-export type ChainId = 1 | 30 | 31;
+export type ChainId = 1 | 3 | 30 | 31;
 
 export type ContainerState = BlockChainProviderState;
 
 export interface IContractNetworks {
   eth_mainnet: INetworkToContract;
+  eth_ropsten: INetworkToContract;
   rsk_mainnet: INetworkToContract;
   rsk_testnet: INetworkToContract;
 }
@@ -54,6 +55,7 @@ export interface Transaction {
 
 export interface DestinationContracts {
   eth_mainnet: DestinationOption[];
+  eth_ropsten: DestinationOption[];
   rsk_mainnet: DestinationOption[];
   rsk_testnet: DestinationOption[];
 }
