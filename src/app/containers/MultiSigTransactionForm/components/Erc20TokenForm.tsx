@@ -11,7 +11,6 @@ import {
   er20_transfer_abi,
   er20_transfer_abi_decode,
 } from '../../BlockChainProvider/requests/erc20';
-import { toWei } from '../../../../utils/helpers';
 
 interface Props {
   onData: (data: string) => void;
