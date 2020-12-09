@@ -16,13 +16,6 @@ export const initialState: ContainerState = {
   connected: false,
   connecting: false,
   address: '',
-  governanceContractConfig: {
-    proposalMaxOperations: 10,
-    votingDelay: 1,
-    votingPeriod: 8640,
-    proposalThreshold: 0,
-    quorumVotes: 0,
-  },
   blockNumber: 0,
   syncBlockNumber: 0,
   transactionStack: [],

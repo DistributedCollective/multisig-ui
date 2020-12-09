@@ -46,7 +46,7 @@ export function EventContainer(props: Props) {
         {},
         block - blocksToLook,
       );
-      setEvents(events.reverse());
+      setEvents(events.reverse().slice(0, 3));
       setLoading(false);
     };
     get().then().catch(console.error);
@@ -60,7 +60,7 @@ export function EventContainer(props: Props) {
   );
 
   return (
-    <div className="bg-white rounded shadow p-3">
+    <div className="bg-white rounded shadow p-3 w-full">
       <h3 className="mb-3 font-semibold">Last submissions</h3>
       {loading && (
         <div className="flex w-full flex-col space-y-4">
@@ -73,7 +73,7 @@ export function EventContainer(props: Props) {
         <>No submissions in last {blocksToLook} blocks.</>
       )}
       {!loading && events.length > 0 && (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
           {events.map(e => (
             <SubmissionEvent
               key={e.returnValues.transactionId}
@@ -102,7 +102,7 @@ function SubmissionEvent({
   );
 
   return (
-    <div className="rounded shadow p-3 text-xs">
+    <div className="rounded shadow p-3 text-xs lg:flex-1">
       <div className="flex flex-row justify-between space-x-4 mb-2">
         <div className="text-gray-600">Tx ID:</div>
         <div>

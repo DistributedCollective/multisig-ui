@@ -58,7 +58,7 @@ export function MultiSignConfirmTransactionForm(props: Props) {
   }, [props.transactionId]);
 
   return (
-    <div className="bg-white rounded shadow p-3">
+    <div className="bg-white rounded shadow p-3 lg:flex-1">
       <h3 className="mb-3 font-semibold">Confirm Transaction</h3>
       <form onSubmit={handleSubmit}>
         <FormGroup label="Transaction ID">

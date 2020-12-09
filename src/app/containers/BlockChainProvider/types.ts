@@ -8,7 +8,6 @@ export interface BlockChainProviderState {
   connected: boolean;
   connecting: boolean;
   address: string;
-  governanceContractConfig: GovernanceContractConfig;
   blockNumber: number;
   syncBlockNumber: number;
   transactionStack: string[];
@@ -36,14 +35,6 @@ export interface IContract {
   abi: AbiItem[] | AbiItem;
 }
 
-export interface GovernanceContractConfig {
-  proposalMaxOperations: number;
-  votingDelay: number;
-  votingPeriod: number;
-  proposalThreshold: number;
-  quorumVotes: number;
-}
-
 export interface Transactions {
   [transactionHash: string]: Transaction;
 }
@@ -59,6 +50,17 @@ export interface Transaction {
   to: string;
   status: TransactionStatus;
   type?: TransactionType;
+}
+
+export interface DestinationContracts {
+  eth_mainnet: DestinationOption[];
+  rsk_mainnet: DestinationOption[];
+  rsk_testnet: DestinationOption[];
+}
+
+export interface DestinationOption {
+  value: string;
+  label: string;
 }
 
 export type ContractName = keyof INetworkToContract;

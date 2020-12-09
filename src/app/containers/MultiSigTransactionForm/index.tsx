@@ -22,6 +22,8 @@ import {
 import { bignumber } from 'mathjs';
 import { multisign_submitTransaction } from '../BlockChainProvider/requests/multisig';
 import { selectBlockChainProvider } from '../BlockChainProvider/selectors';
+import { DestinationOption } from '../BlockChainProvider/types';
+import { destinations } from '../BlockChainProvider/classifiers';
 
 const txTypeOptions = [
   { value: TxType.CUSTOM, label: 'Custom data' },
@@ -34,7 +36,7 @@ export function MultiSigTransactionForm(props: Props) {
   useInjectReducer({ key: sliceKey, reducer: reducer });
   useInjectSaga({ key: sliceKey, saga: multiSigTransactionFormSaga });
 
-  const { chainId } = useSelector(selectBlockChainProvider);
+  const { chainId, network } = useSelector(selectBlockChainProvider);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const multiSigTransactionForm = useSelector(selectMultiSigTransactionForm);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -48,6 +50,9 @@ export function MultiSigTransactionForm(props: Props) {
   const [txType, setTxType] = useState<string>(String(TxType.ERC20_TRANSFER));
   const [isValid, setIsValid] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [destinationOptions, setDestinationOptions] = useState<
+    DestinationOption[]
+  >([]);
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
@@ -88,15 +93,34 @@ export function MultiSigTransactionForm(props: Props) {
     }
   }, [form]);
 
+  useEffect(() => {
+    setDestinationOptions([
+      { value: '', label: 'Custom' },
+      ...destinations[network],
+    ]);
+  }, [network]);
+
   return (
-    <div className="bg-white rounded shadow p-3">
+    <div className="bg-white rounded shadow p-3 lg:flex-1">
       <h3 className="mb-3 font-semibold">Submit Transaction</h3>
       <form onSubmit={handleSubmit}>
         <div className="md:flex md:space-x-4">
           <div className="md:w-7/12">
             <FormGroup label="Destination">
               <InputGroup
-                leftIcon={'user'}
+                leftElement={
+                  <HTMLSelect
+                    className="mr-3"
+                    onChange={e =>
+                      setForm(prevState => ({
+                        ...prevState,
+                        destination: e.currentTarget.value,
+                      }))
+                    }
+                    options={destinationOptions}
+                    value={form.destination}
+                  />
+                }
                 value={form.destination}
                 onChange={handleInputChange('destination')}
                 placeholder="0x95f1f9393D1d3e46Df2cDa491fc323E142758c21"
