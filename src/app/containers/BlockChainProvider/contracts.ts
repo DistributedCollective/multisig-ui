@@ -22,7 +22,7 @@ export const contracts: IContractNetworks = {
   },
   rsk_mainnet: {
     multiSigWallet: {
-      address: '0x08118a219a4e34E06176cD0861fcDDB865771111',
+      address: '0x37A706259F5201C03f6Cb556A960F30F86842d01',
       abi: MultiSigWallet as any,
     },
   },
