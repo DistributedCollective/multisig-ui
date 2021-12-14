@@ -93,6 +93,10 @@ class Network {
     return this.web3.eth.getBlockNumber();
   }
 
+  public async gasPrice(): Promise<number> {
+    return this.web3.eth.getGasPrice().then(response => Number(response) / 1e9);
+  }
+
   public async call(
     contractName: ContractName,
     methodName: string,

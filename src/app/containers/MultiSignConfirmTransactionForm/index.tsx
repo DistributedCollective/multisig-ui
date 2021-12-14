@@ -5,14 +5,13 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { reducer, sliceKey } from './slice';
-import { selectMultiSignConfirmTransactionForm } from './selectors';
 import { multiSignConfirmTransactionFormSaga } from './saga';
-import { Button, FormGroup, InputGroup } from '@blueprintjs/core';
+import { Button, FormGroup, InputGroup, Spinner } from '@blueprintjs/core';
 import { multisign_confirmTransaction } from '../BlockChainProvider/requests/multisig';
+import { useGetGasPrice } from 'app/hooks/useGetGasPrice';
 
 interface Props {
   transactionId: string;
@@ -22,12 +21,7 @@ export function MultiSignConfirmTransactionForm(props: Props) {
   useInjectReducer({ key: sliceKey, reducer: reducer });
   useInjectSaga({ key: sliceKey, saga: multiSignConfirmTransactionFormSaga });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const multiSignConfirmTransactionForm = useSelector(
-    selectMultiSignConfirmTransactionForm,
-  );
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const dispatch = useDispatch();
+  const gasPrice = useGetGasPrice();
 
   const [transactionId, setTransactionId] = useState<string>(
     props.transactionId,
@@ -40,13 +34,16 @@ export function MultiSignConfirmTransactionForm(props: Props) {
       event && event.preventDefault && event.preventDefault();
       setIsLoading(true);
       try {
-        await multisign_confirmTransaction(transactionId);
+        await multisign_confirmTransaction(
+          transactionId,
+          (Number(gasPrice.value) * 1e9).toString(),
+        );
       } catch (e) {
         console.error(e);
       }
       setIsLoading(false);
     },
-    [transactionId],
+    [transactionId, gasPrice.value],
   );
 
   useEffect(() => {
@@ -67,6 +64,15 @@ export function MultiSignConfirmTransactionForm(props: Props) {
             value={transactionId}
             onChange={e => setTransactionId(e.currentTarget.value)}
             placeholder="1"
+          />
+        </FormGroup>
+        <FormGroup label="Gas Price (gwei)">
+          <InputGroup
+            leftIcon={'numerical'}
+            value={gasPrice.value}
+            onChange={event => gasPrice.set(event.currentTarget.value)}
+            placeholder="0.065"
+            rightElement={gasPrice.loading ? <Spinner size={16} /> : <></>}
           />
         </FormGroup>
         <Button

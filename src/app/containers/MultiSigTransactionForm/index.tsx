@@ -5,14 +5,19 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { reducer, sliceKey } from './slice';
-import { selectMultiSigTransactionForm } from './selectors';
 import { multiSigTransactionFormSaga } from './saga';
 import { ISubmitTransactionSignature, TxType } from './types';
-import { FormGroup, HTMLSelect, InputGroup, Button } from '@blueprintjs/core';
+import {
+  FormGroup,
+  HTMLSelect,
+  InputGroup,
+  Button,
+  Spinner,
+} from '@blueprintjs/core';
 import { SwitchDataForm } from './components/SwitchDataForm';
 import {
   checkAddressChecksum,
@@ -24,6 +29,7 @@ import { multisign_submitTransaction } from '../BlockChainProvider/requests/mult
 import { selectBlockChainProvider } from '../BlockChainProvider/selectors';
 import { DestinationOption } from '../BlockChainProvider/types';
 import { destinations } from '../BlockChainProvider/classifiers';
+import { useGetGasPrice } from 'app/hooks/useGetGasPrice';
 
 const txTypeOptions = [
   { value: TxType.CUSTOM, label: 'Custom data' },
@@ -37,10 +43,7 @@ export function MultiSigTransactionForm(props: Props) {
   useInjectSaga({ key: sliceKey, saga: multiSigTransactionFormSaga });
 
   const { chainId, network } = useSelector(selectBlockChainProvider);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const multiSigTransactionForm = useSelector(selectMultiSigTransactionForm);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const dispatch = useDispatch();
+  const gasPrice = useGetGasPrice();
 
   const [form, setForm] = useState<ISubmitTransactionSignature>({
     destination: '',
@@ -63,13 +66,14 @@ export function MultiSigTransactionForm(props: Props) {
           form.destination,
           toWei(form.value),
           form.data,
+          (Number(gasPrice.value) * 1e9).toString(),
         );
       } catch (e) {
         console.error(e);
       }
       setIsLoading(false);
     },
-    [form],
+    [form, gasPrice.value],
   );
 
   const handleInputChange = useCallback(
@@ -153,6 +157,20 @@ export function MultiSigTransactionForm(props: Props) {
 
         <div className="p-3 bg-gray-300 text-sm break-all mb-3">
           {form.data}
+        </div>
+
+        <div className="md:flex md:space-x-4 mt-4">
+          <div className="md:w-6/12">
+            <FormGroup label="Gas Price (gwei)">
+              <InputGroup
+                leftIcon={'numerical'}
+                value={gasPrice.value}
+                onChange={event => gasPrice.set(event.currentTarget.value)}
+                placeholder="0.065"
+                rightElement={gasPrice.loading ? <Spinner size={16} /> : <></>}
+              />
+            </FormGroup>
+          </div>
         </div>
 
         <div className="flex justify-between space-x items-center">
