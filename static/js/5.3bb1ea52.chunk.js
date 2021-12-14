@@ -1,0 +1,1 @@
+(this["webpackJsonpmultisig-ui"]=this["webpackJsonpmultisig-ui"]||[]).push([[5],{1726:function(t,n,i){"use strict";i.r(n),i.d(n,"Footer",(function(){return r}));var u=i(0),e=i.n(u);function r(){return e.a.createElement(e.a.Fragment,null)}}}]);
