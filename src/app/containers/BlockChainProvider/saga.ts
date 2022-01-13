@@ -13,24 +13,24 @@ import Web3 from 'web3';
 import { network } from './network';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { ChainId } from './types';
-import { wssNodes } from './classifiers';
+import { rpcNodes, wssNodes } from './classifiers';
 import { walletConnection } from './web3-modal';
 import { selectBlockChainProvider } from './selectors';
 import { TransactionReceipt } from 'web3-core';
 import { getNetwork } from '../../../utils/helpers';
 
-function* setupSaga() {
+const isWebsocket = (host: string) => !host?.startsWith('http');
+
+function setupSaga() {
   walletConnection.init();
-  yield put(actions.setupCompleted());
 }
 
 function* networkSaga({
   payload,
 }: PayloadAction<{ chainId: ChainId; networkId: number }>) {
-  const nodeUrl = wssNodes[payload.chainId];
+  const nodeUrl = wssNodes[payload.chainId] || rpcNodes[payload.chainId];
   let web3Provider;
-  let isWebsocket = false;
-  if (nodeUrl.startsWith('http')) {
+  if (!isWebsocket(nodeUrl)) {
     web3Provider = new Web3.providers.HttpProvider(nodeUrl, {
       keepAlive: true,
     });
@@ -39,11 +39,10 @@ function* networkSaga({
       timeout: 5,
       reconnectDelay: 10,
     });
-    isWebsocket = true;
   }
   const web3 = new Web3(web3Provider);
 
-  network.setWeb3(web3, getNetwork(payload.chainId), isWebsocket);
+  network.setWeb3(web3, getNetwork(payload.chainId), isWebsocket(nodeUrl));
   yield put(actions.setupCompleted());
 }
 
@@ -57,54 +56,64 @@ function* disconnectSaga() {
 
 // start block watcher
 function createBlockPollChannel({ interval, web3 }) {
-  return eventChannel(emit => {
-    web3.currentProvider.sendAsync = web3.currentProvider.send;
-    const blockTracker = new BlockTracker({
-      provider: web3.currentProvider,
-      pollingInterval: interval,
-    });
-
-    blockTracker.on('block', block => {
-      console.log('got block', Number(block.number));
-      emit(actions.blockReceived(block.number));
-      emit(actions.processBlock(block));
-    });
-
-    blockTracker.start().catch(error => {
-      emit(actions.blockFailed(error.message));
-      emit(END);
-    });
-
-    return () => {
-      blockTracker.stop().catch(_ => {
-        // BlockTracker assumes there is an outstanding event subscription.
-        // However for our tests we start and stop a BlockTracker in succession
-        // that triggers an error.
+  if (
+    !isWebsocket(
+      (web3.currentProvider as any)?.host || (web3.currentProvider as any)?.url,
+    )
+  ) {
+    return eventChannel(emit => {
+      web3.currentProvider.sendAsync = web3.currentProvider.send;
+      const blockTracker = new BlockTracker({
+        provider: web3.currentProvider,
+        pollingInterval: interval,
       });
-    };
-  });
+
+      blockTracker.on('block', block => {
+        emit(actions.processBlock(block));
+      });
+
+      blockTracker.start().catch(error => {
+        emit(actions.blockFailed(error.message));
+        emit(END);
+      });
+
+      return () => {
+        blockTracker.stop().catch(_ => {
+          // BlockTracker assumes there is an outstanding event subscription.
+          // However for our tests we start and stop a BlockTracker in succession
+          // that triggers an error.
+        });
+      };
+    });
+  }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function* callCreateBlockPollChannel() {
   const web3 = network.web3;
-  const blockChannel = yield call(createBlockPollChannel, {
-    web3,
-    interval: 10000,
-  });
+  if (
+    !isWebsocket(
+      (web3.currentProvider as any)?.host || (web3.currentProvider as any)?.url,
+    )
+  ) {
+    const blockChannel = yield call(createBlockPollChannel, {
+      web3,
+      interval: 10000,
+    });
 
-  try {
-    while (true) {
-      const event = yield take(blockChannel);
-      yield put(event);
+    try {
+      while (true) {
+        const event = yield take(blockChannel);
+        yield put(event);
+      }
+    } finally {
+      blockChannel.close();
     }
-  } finally {
-    blockChannel.close();
   }
 }
 
 function* processBlock({ payload }: PayloadAction<any>) {
   const block = payload;
+
   try {
     const { address, transactionStack } = yield select(
       selectBlockChainProvider,
@@ -164,50 +173,62 @@ function* processBlock({ payload }: PayloadAction<any>) {
 }
 
 function createBlockChannels({ web3 }) {
-  return eventChannel(emit => {
-    const blockEvents = web3.eth
-      .subscribe('newBlockHeaders', (error, result) => {
-        if (error) {
+  if (
+    isWebsocket(
+      (web3.currentProvider as any)?.host || (web3.currentProvider as any)?.url,
+    )
+  ) {
+    return eventChannel(emit => {
+      const blockEvents = web3.eth
+        .subscribe('newBlockHeaders', (error, result) => {
+          if (error) {
+            emit(actions.blockFailed(error.message));
+
+            console.error('Error in block header subscription:');
+            console.error(error);
+
+            emit(END);
+          }
+        })
+        .on('data', blockHeader => {
+          emit(actions.blockReceived(blockHeader));
+          // emit({
+          //   type: 'BLOCK_RECEIVED',
+          //   blockHeader,
+          //   web3,
+          //   syncAlways,
+          // });
+        })
+        .on('error', error => {
           emit(actions.blockFailed(error.message));
-
-          console.error('Error in block header subscription:');
-          console.error(error);
-
+          // emit({ type: 'BLOCKS_FAILED', error });
           emit(END);
-        }
-      })
-      .on('data', blockHeader => {
-        emit(actions.blockReceived(blockHeader));
-        // emit({
-        //   type: 'BLOCK_RECEIVED',
-        //   blockHeader,
-        //   web3,
-        //   syncAlways,
-        // });
-      })
-      .on('error', error => {
-        emit(actions.blockFailed(error.message));
-        // emit({ type: 'BLOCKS_FAILED', error });
-        emit(END);
-      });
+        });
 
-    return () => {
-      blockEvents.off();
-    };
-  });
+      return () => {
+        blockEvents.off();
+      };
+    });
+  }
 }
 
 function* callCreateBlockChannels() {
   const web3 = network.web3;
-  const blockChannel = yield call(createBlockChannels, { web3 });
+  if (
+    isWebsocket(
+      (web3.currentProvider as any)?.host || (web3.currentProvider as any)?.url,
+    )
+  ) {
+    const blockChannel = yield call(createBlockChannels, { web3 });
 
-  try {
-    while (true) {
-      const event = yield take(blockChannel);
-      yield put(event);
+    try {
+      while (true) {
+        const event = yield take(blockChannel);
+        yield put(event);
+      }
+    } finally {
+      blockChannel.close();
     }
-  } finally {
-    blockChannel.close();
   }
 }
 
@@ -222,7 +243,7 @@ function* processBlockHeader(event) {
       payload: block,
     });
   } catch (error) {
-    console.error('Error in block processing:');
+    console.error('Error in block header processing:');
     console.error(error);
   }
 }
@@ -236,6 +257,6 @@ export function* blockChainProviderSaga() {
   yield takeLatest(actions.connected.type, callCreateBlockChannels);
   yield takeEvery(actions.blockReceived.type, processBlockHeader);
   yield takeLatest(actions.disconnect.type, disconnectSaga);
-  // yield takeLatest(actions.setupCompleted.type, callCreateBlockPollChannel);
-  // yield takeEvery(actions.processBlock.type, processBlock); // when using poll channel
+  yield takeLatest(actions.connected.type, callCreateBlockPollChannel);
+  yield takeEvery(actions.processBlock.type, processBlock); // when using poll channel
 }

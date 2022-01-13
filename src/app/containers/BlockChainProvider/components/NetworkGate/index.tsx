@@ -27,7 +27,7 @@ export function NetworkGate() {
       >
         <div className="text-center">
           <h2 className="leading-none mb-5">Wrong Network</h2>
-          <p>Switch to RSK or Etherem network.</p>
+          <p>Switch to RSK, Etherem or Binance Smart Chain network.</p>
         </div>
       </main>
     </>

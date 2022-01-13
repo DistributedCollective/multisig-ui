@@ -26,4 +26,10 @@ export const contracts: IContractNetworks = {
       abi: MultiSigWallet as any,
     },
   },
+  bsc_testnet: {
+    multiSigWallet: {
+      address: '0xCc653b64e8f4f2aDEa87490f11d090472E08838A',
+      abi: MultiSigWallet as any,
+    },
+  },
 };

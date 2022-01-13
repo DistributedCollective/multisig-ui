@@ -17,7 +17,7 @@ import { RowSkeleton } from '../../components/PageSkeleton';
 import { EventData } from 'web3-eth-contract';
 import { LinkToExplorer } from '../../components/LinkToExplorer';
 
-const blocksToLook = 5000;
+const blocksToLook = 4999;
 
 interface Props {
   onSelect: (item: string) => void;

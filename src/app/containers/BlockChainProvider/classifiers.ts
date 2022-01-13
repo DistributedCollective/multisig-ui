@@ -5,6 +5,8 @@ export const networkTitles = {
   3: 'Ropsten',
   30: 'RootStock',
   31: 'RSK Testnet',
+  56: 'Binance Smart Chain',
+  97: 'Smart Chain Testnet',
 };
 
 export const networks: { [key: number]: NetworkName } = {
@@ -12,6 +14,8 @@ export const networks: { [key: number]: NetworkName } = {
   3: 'eth_ropsten',
   30: 'rsk_mainnet',
   31: 'rsk_testnet',
+  // 56: 'bsc_mainnet',
+  97: 'bsc_testnet',
 };
 
 export const rpcNodes = {
@@ -19,6 +23,8 @@ export const rpcNodes = {
   3: 'https://mainnet.infura.io/v3/237d5a5403134af7b7211fd6996c15d3',
   30: 'https://mainnet.sovryn.app/rpc',
   31: 'https://testnet.sovryn.app/rpc',
+  56: 'https://bsc-dataseed.binance.org',
+  97: 'https://data-seed-prebsc-1-s1.binance.org:8545',
 };
 
 export const wssNodes = {
@@ -26,6 +32,7 @@ export const wssNodes = {
   3: 'wss://ropsten.infura.io/ws/v3/237d5a5403134af7b7211fd6996c15d3',
   30: 'wss://mainnet.sovryn.app/websocket',
   31: 'wss://testnet.sovryn.app/ws',
+  56: 'wss://bsc-ws-node.nariox.org:443',
 };
 
 export const blockExplorers = {
@@ -33,6 +40,8 @@ export const blockExplorers = {
   3: 'https://ropsten.etherscan.io',
   30: 'https://explorer.rsk.co',
   31: 'https://explorer.testnet.rsk.co',
+  56: 'https://bscscan.com',
+  97: 'https://testnet.bscscan.com',
 };
 
 export const destinations: DestinationContracts = {
@@ -55,6 +64,7 @@ export const destinations: DestinationContracts = {
     { value: '0xCB46c0ddc60D18eFEB0E586C17Af6ea36452Dae0', label: 'tDOC' },
     { value: '0x4D5a316D23eBE168d8f887b4447bf8DbFA4901CC', label: 'tUSDT' },
   ],
+  bsc_testnet: [],
 };
 
 // Block time in seconds
